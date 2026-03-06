@@ -7,6 +7,34 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                <form method="GET" action="{{ route('analysis') }}" class="flex flex-wrap gap-6 items-end">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Bulan</label>
+                        <select name="month" onchange="this.form.submit()" class="rounded-xl border-gray-200 text-sm focus:ring-indigo-500 w-40">
+                            @foreach(range(1, 12) as $m)
+                                <option value="{{ $m }}" {{ request('month', now()->month) == $m ? 'selected' : '' }}>
+                                    {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Tahun</label>
+                        <select name="year" onchange="this.form.submit()" class="rounded-xl border-gray-200 text-sm focus:ring-indigo-500 w-32">
+                            @foreach(range(now()->year - 2, now()->year) as $y)
+                                <option value="{{ $y }}" {{ request('year', now()->year) == $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="ml-auto">
+                        <a href="{{ route('analysis') }}" class="text-sm text-gray-400 hover:text-gray-600 font-bold uppercase tracking-wider">Reset</a>
+                    </div>
+                </form>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 {{ $percentageChange <= 0 ? 'border-green-500' : 'border-red-500' }} hover:shadow-md transition-shadow">
@@ -31,20 +59,20 @@
                     </p>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-indigo-500 hover:shadow-md transition-shadow">
-                    <div class="text-sm font-bold text-gray-400 uppercase tracking-wider">Bulan Paling Boros</div>
-                    <div class="mt-2">
-                        <span class="text-2xl font-extrabold text-gray-900">{{ $monthlyData->sortByDesc('total')->first()->month ?? 'N/A' }}</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">Berdasarkan data 6 bulan terkini</p>
-                </div>
-
                 <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-yellow-500 hover:shadow-md transition-shadow">
                     <div class="text-sm font-bold text-gray-400 uppercase tracking-wider">Kategori Dominan</div>
                     <div class="mt-2">
                         <span class="text-2xl font-extrabold text-gray-900">{{ $categoryData->sortByDesc('total')->first()->name ?? 'N/A' }}</span>
                     </div>
                     <p class="text-sm text-gray-500 mt-2">Kategori perbelanjaan tertinggi</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border-b-4 border-indigo-500 hover:shadow-md transition-shadow">
+                    <div class="text-sm font-bold text-gray-400 uppercase tracking-wider">Bulan Paling Boros</div>
+                    <div class="mt-2">
+                        <span class="text-2xl font-extrabold text-gray-900">{{ $monthlyData->sortByDesc('total')->first()->month ?? 'N/A' }}</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Berdasarkan data 6 bulan terkini</p>
                 </div>
             </div>
 

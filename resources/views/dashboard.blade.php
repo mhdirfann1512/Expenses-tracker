@@ -10,70 +10,72 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white border-l-8 border-indigo-600 shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        Total Perbelanjaan
-                    </div>
-                    <div class="mt-2 text-3xl font-bold text-gray-900">
-                        RM {{ number_format($totalAmount, 2) }}
-                    </div>
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Perbelanjaan</div>
+                    <div class="mt-3 text-3xl font-black text-gray-900">RM {{ number_format($totalAmount, 2) }}</div>
+                    <div class="mt-2 text-sm text-gray-500 font-medium">{{ request()->has('month') && request('month') ? date('F', mktime(0, 0, 0, request('month'), 1)) : 'Sepanjang Masa' }}</div>
                 </div>
 
                 <div class="bg-white border-l-8 border-green-500 shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                        Bilangan Transaksi
-                    </div>
-                    <div class="mt-2 text-3xl font-bold text-gray-900">
-                        {{ $expenses->count() }}
-                    </div>
+                    <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Bil. Transaksi</div>
+                    <div class="mt-3 text-3xl font-black text-gray-900">{{ $expenses->count() }}</div>
+                    <div class="mt-2 text-sm text-gray-500 font-medium">{{ request()->has('month') && request('month') ? 'Rekod bulan ' . date('F', mktime(0, 0, 0, request('month'), 1)) : 'Jumlah keseluruhan' }}</div>
+                </div>
+
+                <div class="bg-indigo-600 shadow-sm sm:rounded-lg p-6 text-white">
+                    <div class="text-xs font-bold text-indigo-100 uppercase tracking-widest">Tips Bijak</div>
+                    <div class="mt-3 text-lg font-bold">Jejak perbelanjaan</div>
+                    <div class="mt-1 text-xs text-indigo-100">Simpan resit untuk audit bulanan yang lebih mudah.</div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-lg mb-6 border">
-                <form method="GET" action="{{ route('dashboard') }}" class="flex flex-wrap gap-4 items-end">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-2 md:grid-cols-5 gap-4 items-end">
                     
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Bulan</label>
-                        <select name="month" class="rounded-md border-gray-300 text-sm focus:ring-indigo-500">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Bulan</label>
+                        <select name="month" class="w-full rounded-xl border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Semua Bulan</option>
                             @foreach(range(1, 12) as $m)
-                                <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
-                                    {{ date('F', mktime(0, 0, 0, $m, 1)) }}
-                                </option>
+                                <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Kategori</label>
-                        <select name="category_id" class="rounded-md border-gray-300 text-sm focus:ring-indigo-500">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Kategori</label>
+                        <select name="category_id" class="w-full rounded-xl border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Semua Kategori</option>
                             @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                    {{ $cat->name }}
-                                </option>
+                                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Susun Ikut</label>
-                        <select name="sort_by" class="rounded-md border-gray-300 text-sm focus:ring-indigo-500">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Susun Ikut</label>
+                        <select name="sort_by" class="w-full rounded-xl border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="spent_at" {{ request('sort_by') == 'spent_at' ? 'selected' : '' }}>Tarikh</option>
                             <option value="amount" {{ request('sort_by') == 'amount' ? 'selected' : '' }}>Jumlah (RM)</option>
                         </select>
                     </div>
 
                     <div>
-                        <select name="sort_order" class="rounded-md border-gray-300 text-sm focus:ring-indigo-500">
-                            <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Besar/Terbaru</option>
-                            <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Kecil/Lama</option>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Turutan</label>
+                        <select name="sort_order" class="w-full rounded-xl border-gray-200 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Terbaru/Besar</option>
+                            <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Lama/Kecil</option>
                         </select>
                     </div>
 
                     <div class="flex gap-2">
-                        <x-primary-button type="submit">Filter</x-primary-button>
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase hover:bg-gray-300">
-                            Reset
+                        <button type="submit" 
+                                class="flex-1 bg-gray-900 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-black transition">
+                                Filter
+                        </button>
+                        
+                        <a href="{{ route('dashboard') }}" 
+                        class="flex-1 text-center px-6 py-2.5 bg-gray-100 text-gray-500 rounded-xl font-bold text-xs hover:bg-gray-200 transition">
+                        Reset
                         </a>
                     </div>
                 </form>
@@ -127,10 +129,12 @@
                                     
                                     <td class="p-4 text-center">
                                         @if($item->attachment)
-                                            <a href="{{ asset('storage/' . $item->attachment) }}" target="_blank" class="inline-flex items-center text-indigo-600 hover:text-indigo-900 text-xs font-bold">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            <button type="button" 
+                                                    onclick="openImage('{{ asset('storage/' . $item->attachment) }}')" 
+                                                    class="inline-flex items-center text-indigo-600 hover:text-indigo-900 text-xs font-bold">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                                 LIHAT
-                                            </a>
+                                            </button>
                                         @else
                                             <span class="text-gray-300 text-xs">-</span>
                                         @endif
@@ -307,5 +311,18 @@
         });
     </script>
 @endif
+
+<x-modal name="view-image" maxWidth="lg" focusable>
+    <div class="p-2">
+        <img id="modal-image-src" src="" alt="Resit" class="w-full h-auto rounded-lg shadow-lg">
+    </div>
+</x-modal>
+
+<script>
+    function openImage(url) {
+        document.getElementById('modal-image-src').src = url;
+        window.dispatchEvent(new CustomEvent('open-modal', { detail: 'view-image' }));
+    }
+</script>
 
 </x-app-layout>
